@@ -86,7 +86,7 @@ public class PdfRendererBasicFragment extends Fragment implements View.OnClickLi
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         // Retain view references.
-        mImageView = (ImageView) view.findViewById(R.id.image);
+        mImageView = (ImageView) view.findViewById(R.id.document);
         mButtonPrevious = (Button) view.findViewById(R.id.previous);
         mButtonNext = (Button) view.findViewById(R.id.next);
         // Bind events.
