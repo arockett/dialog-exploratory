@@ -17,9 +17,25 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
+        android:id="@+id/action_create"
+        android:showAsAction="never"
+        android:orderInCategory="1"
+        android:title="@string/create" />
+    <item
+        android:id="@+id/action_load"
+        android:showAsAction="never"
+        android:orderInCategory="2"
+        android:title="@string/load" />
+    <item
+        android:id="@+id/action_save"
+        android:showAsAction="never"
+        android:orderInCategory="3"
+        android:title="@string/save" />
+    <item
         android:id="@+id/action_info"
         android:icon="@drawable/ic_action_info"
         android:showAsAction="always"
+        android:orderInCategory="4"
         android:title="@string/info" />
 
 </menu>

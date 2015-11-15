@@ -47,6 +47,20 @@ public class MainActivity extends Activity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.action_create:
+                new AlertDialog.Builder(this)
+                        .setMessage(R.string.error_not_implemented)
+                        .setPositiveButton(android.R.string.ok, null)
+                        .show();
+                return true;
+            case R.id.action_load:
+                new AlertDialog.Builder(this)
+                        .setMessage(R.string.error_not_implemented)
+                        .setPositiveButton(android.R.string.ok, null)
+                        .show();
+                return true;
+            case R.id.action_save:
+                return true;
             case R.id.action_info:
                 new AlertDialog.Builder(this)
                         .setMessage(R.string.intro_message)
