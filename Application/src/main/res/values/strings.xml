@@ -16,7 +16,10 @@
 -->
 <resources>
 
-    <string name="app_name_with_index">PdfRendererBasic (%1$d/%2$d)</string>
+    <string name="app_name_with_index">diaLog-exploratory (%1$d/%2$d)</string>
+    <string name="create">Create</string>
+    <string name="load">Load</string>
+    <string name="save">Save</string>
     <string name="info">Info</string>
     <string name="previous">Previous</string>
     <string name="next">Next</string>

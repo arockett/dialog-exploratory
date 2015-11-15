@@ -16,14 +16,16 @@
 -->
 
 <resources>
-    <string name="app_name">PdfRendererBasic</string>
+    <string name="app_name">diaLog-exploratory</string>
     <string name="intro_message">
         <![CDATA[
         
             
-            This sample demonstrates how to use PdfRenderer to display PDF documents on the screen.
+            diaLog is the best way to further discussion of topics important to us all.
             
         
         ]]>
     </string>
+
+    <string name="error_not_implemented">This feature is not yet implemented...</string>
 </resources>

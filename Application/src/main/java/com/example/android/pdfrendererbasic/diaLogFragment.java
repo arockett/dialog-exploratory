@@ -36,7 +36,7 @@ import java.io.IOException;
  * This fragment has a big {@ImageView} that shows PDF pages, and 2 {@link android.widget.Button}s to move between
  * pages. We use a {@link android.graphics.pdf.PdfRenderer} to render PDF pages as {@link android.graphics.Bitmap}s.
  */
-public class PdfRendererBasicFragment extends Fragment implements View.OnClickListener {
+public class diaLogFragment extends Fragment implements View.OnClickListener {
 
     /**
      * Key string for saving the state of current page index.
@@ -73,13 +73,13 @@ public class PdfRendererBasicFragment extends Fragment implements View.OnClickLi
      */
     private Button mButtonNext;
 
-    public PdfRendererBasicFragment() {
+    public diaLogFragment() {
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_pdf_renderer_basic, container, false);
+        return inflater.inflate(R.layout.fragment_dialog, container, false);
     }
 
     @Override
