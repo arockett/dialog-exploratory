@@ -34,7 +34,7 @@
     <item
         android:id="@+id/action_info"
         android:icon="@drawable/ic_action_info"
-        android:showAsAction="always"
+        android:showAsAction="ifRoom"
         android:orderInCategory="4"
         android:title="@string/info" />
 
