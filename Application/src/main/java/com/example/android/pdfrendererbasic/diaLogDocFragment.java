@@ -27,7 +27,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -36,12 +35,23 @@ import java.io.IOException;
  * This fragment has a big {@ImageView} that shows PDF pages, and 2 {@link android.widget.Button}s to move between
  * pages. We use a {@link android.graphics.pdf.PdfRenderer} to render PDF pages as {@link android.graphics.Bitmap}s.
  */
-public class diaLogFragment extends Fragment implements View.OnClickListener {
+public class diaLogDocFragment extends Fragment implements View.OnClickListener {
+
+    private enum Mode { READ, ANNOTATE }
 
     /**
      * Key string for saving the state of current page index.
      */
     private static final String STATE_CURRENT_PAGE_INDEX = "current_page_index";
+    /**
+     * Key string for saving the state of current mode.
+     */
+    private static final String STATE_CURRENT_MODE = "curent_mode";
+
+    /**
+     * The current mode, reading or annotating
+     */
+    private Mode currentMode = Mode.READ;
 
     /**
      * File descriptor of the PDF.
@@ -59,9 +69,9 @@ public class diaLogFragment extends Fragment implements View.OnClickListener {
     private PdfRenderer.Page mCurrentPage;
 
     /**
-     * {@link android.widget.ImageView} that shows a PDF page as a {@link android.graphics.Bitmap}
+     * {@link DocumentView} that shows a PDF page as a {@link android.graphics.Bitmap}
      */
-    private ImageView mImageView;
+    private DocumentView mDocumentView;
 
     /**
      * {@link android.widget.Button} to move to the previous page.
@@ -73,20 +83,20 @@ public class diaLogFragment extends Fragment implements View.OnClickListener {
      */
     private Button mButtonNext;
 
-    public diaLogFragment() {
+    public diaLogDocFragment() {
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_dialog, container, false);
+        return inflater.inflate(R.layout.fragment_dialog_doc, container, false);
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         // Retain view references.
-        mImageView = (ImageView) view.findViewById(R.id.document);
+        mDocumentView = (DocumentView) view.findViewById(R.id.documentView);
         mButtonPrevious = (Button) view.findViewById(R.id.previous);
         mButtonNext = (Button) view.findViewById(R.id.next);
         // Bind events.
@@ -97,6 +107,8 @@ public class diaLogFragment extends Fragment implements View.OnClickListener {
         // If there is a savedInstanceState (screen orientations, etc.), we restore the page index.
         if (null != savedInstanceState) {
             index = savedInstanceState.getInt(STATE_CURRENT_PAGE_INDEX, 0);
+            currentMode = (Mode)savedInstanceState.getSerializable(STATE_CURRENT_MODE);
+            mDocumentView.loadState(savedInstanceState);
         }
         showPage(index);
     }
@@ -128,6 +140,9 @@ public class diaLogFragment extends Fragment implements View.OnClickListener {
         super.onSaveInstanceState(outState);
         if (null != mCurrentPage) {
             outState.putInt(STATE_CURRENT_PAGE_INDEX, mCurrentPage.getIndex());
+            outState.putSerializable(STATE_CURRENT_MODE, currentMode);
+
+            mDocumentView.saveState(outState);
         }
     }
 
@@ -178,7 +193,7 @@ public class diaLogFragment extends Fragment implements View.OnClickListener {
         // Pass either RENDER_MODE_FOR_DISPLAY or RENDER_MODE_FOR_PRINT for the last parameter.
         mCurrentPage.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY);
         // We are ready to show the Bitmap to user.
-        mImageView.setImageBitmap(bitmap);
+        mDocumentView.setPage(bitmap, index);
         updateUi();
     }
 

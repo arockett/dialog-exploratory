@@ -24,7 +24,7 @@ import android.view.MenuItem;
 
 public class MainActivity extends Activity {
 
-    public static final String FRAGMENT_PDF_RENDERER_BASIC = "pdf_renderer_basic";
+    public static final String FRAGMENT_DIALOG_DOC = "diLog_doc";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,8 +32,8 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()
-                    .add(R.id.container, new diaLogFragment(),
-                            FRAGMENT_PDF_RENDERER_BASIC)
+                    .add(R.id.container, new diaLogDocFragment(),
+                            FRAGMENT_DIALOG_DOC)
                     .commit();
         }
     }

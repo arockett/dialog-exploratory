@@ -24,7 +24,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.example.android.pdfrendererbasic.MainActivity;
-import com.example.android.pdfrendererbasic.diaLogFragment;
+import com.example.android.pdfrendererbasic.diaLogDocFragment;
 import com.example.android.pdfrendererbasic.R;
 
 /**
@@ -33,7 +33,7 @@ import com.example.android.pdfrendererbasic.R;
 public class PdfRendererBasicFragmentTests extends ActivityInstrumentationTestCase2<MainActivity> {
 
     private MainActivity mActivity;
-    private diaLogFragment mFragment;
+    private diaLogDocFragment mFragment;
 
     private Button mButtonPrevious;
     private Button mButtonNext;
@@ -46,7 +46,7 @@ public class PdfRendererBasicFragmentTests extends ActivityInstrumentationTestCa
     protected void setUp() throws Exception {
         super.setUp();
         mActivity = getActivity();
-        mFragment = (diaLogFragment) mActivity.getFragmentManager()
+        mFragment = (diaLogDocFragment) mActivity.getFragmentManager()
                 .findFragmentByTag(MainActivity.FRAGMENT_PDF_RENDERER_BASIC);
     }
 
