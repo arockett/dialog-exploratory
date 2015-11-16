@@ -72,6 +72,7 @@ public class diaLogDocFragment extends Fragment implements View.OnClickListener 
      * {@link DocumentView} that shows a PDF page as a {@link android.graphics.Bitmap}
      */
     private DocumentView mDocumentView;
+    private AnnotationView mFreeDrawView;
 
     /**
      * {@link android.widget.Button} to move to the previous page.
@@ -97,6 +98,8 @@ public class diaLogDocFragment extends Fragment implements View.OnClickListener 
         super.onViewCreated(view, savedInstanceState);
         // Retain view references.
         mDocumentView = (DocumentView) view.findViewById(R.id.documentView);
+        mFreeDrawView = (AnnotationView)view.findViewById(R.id.freeDrawView);
+        mFreeDrawView.disable();
         mButtonPrevious = (Button) view.findViewById(R.id.previous);
         mButtonNext = (Button) view.findViewById(R.id.next);
         // Bind events.

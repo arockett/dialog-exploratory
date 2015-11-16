@@ -16,6 +16,16 @@ import android.view.View;
  */
 public class AnnotationView extends View {
 
+    /**
+     * Key string for saving the state of the enabled flag
+     */
+    private static final String STATE_ENABLED = "state_enabled";
+
+    /**
+     * Are we in the annotation mode? If so we should handle touch events
+     */
+    private boolean enabled = false;
+
     private Canvas mCanvas;
     private Bitmap mBitmap;
     private Paint mBitmapPaint;
@@ -55,11 +65,11 @@ public class AnnotationView extends View {
     }
 
     public void saveState(Bundle bundle) {
-
+        bundle.putBoolean(STATE_ENABLED, enabled);
     }
 
     public void loadState(Bundle savedInstanceState) {
-
+        enabled = savedInstanceState.getBoolean(STATE_ENABLED);
     }
 
     @Override
@@ -79,8 +89,20 @@ public class AnnotationView extends View {
         canvas.drawPath(mPath, mPaint);
     }
 
+    public void disable() {
+        enabled = false;
+    }
+
+    public void enable() {
+        enabled = true;
+    }
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        if (!enabled) {
+            return false;
+        }
+
         float x = event.getX();
         float y = event.getY();
 
@@ -88,17 +110,17 @@ public class AnnotationView extends View {
             case MotionEvent.ACTION_DOWN:
                 touch_start(x, y);
                 invalidate();
-                break;
+                return true;
             case MotionEvent.ACTION_MOVE:
                 touch_move(x, y);
                 invalidate();
-                break;
+                return true;
             case MotionEvent.ACTION_UP:
                 touch_up();
                 invalidate();
-                break;
+                return true;
         }
-        return true;
+        return false;
     }
 
     private void touch_start(float x, float y) {
