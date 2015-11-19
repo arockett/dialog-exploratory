@@ -59,6 +59,16 @@
             android:text="@string/previous" />
 
         <Button
+            style="?android:attr/buttonBarButtonStyle"
+            android:id="@+id/newAnnotation"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/new_annotation"
+            android:enabled="true"
+            android:layout_gravity="center" />
+
+        <Button
             android:id="@+id/next"
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="0dp"

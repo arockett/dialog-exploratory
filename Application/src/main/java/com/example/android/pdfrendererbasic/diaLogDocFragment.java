@@ -86,6 +86,11 @@ public class diaLogDocFragment extends Fragment implements View.OnClickListener 
     private Button mButtonPrevious;
 
     /**
+     * {@link android.widget.Button} to start and save new annotations.
+     */
+    private Button mButtonAnnotation;
+
+    /**
      * {@link android.widget.Button} to move to the next page.
      */
     private Button mButtonNext;
@@ -107,9 +112,11 @@ public class diaLogDocFragment extends Fragment implements View.OnClickListener 
         mAnnotationView = (AnnotationView) view.findViewById(R.id.annotationView);
         mAnnotationView.setFreeDrawView((FreeDrawView) view.findViewById(R.id.freeDrawView));
         mButtonPrevious = (Button) view.findViewById(R.id.previous);
+        mButtonAnnotation = (Button) view.findViewById(R.id.newAnnotation);
         mButtonNext = (Button) view.findViewById(R.id.next);
         // Bind events.
         mButtonPrevious.setOnClickListener(this);
+        mButtonAnnotation.setOnClickListener(this);
         mButtonNext.setOnClickListener(this);
         // Show the first page by default.
         int index = 0;
@@ -216,6 +223,12 @@ public class diaLogDocFragment extends Fragment implements View.OnClickListener 
         mButtonPrevious.setEnabled(0 != index);
         mButtonNext.setEnabled(index + 1 < pageCount);
         getActivity().setTitle(getString(R.string.app_name_with_index, index + 1, pageCount));
+
+        if (currentMode == Mode.READ) {
+            mButtonAnnotation.setText(R.string.new_annotation);
+        } else {
+            mButtonAnnotation.setText(R.string.save_annotation);
+        }
     }
 
     /**
@@ -237,8 +250,18 @@ public class diaLogDocFragment extends Fragment implements View.OnClickListener 
             }
             case R.id.next: {
                 // Move to the next page
-                //showPage(mCurrentPage.getIndex() + 1);
-                mAnnotationView.startAnnotation();
+                showPage(mCurrentPage.getIndex() + 1);
+                break;
+            }
+            case R.id.newAnnotation: {
+                // Start or save an annotation
+                if (currentMode == Mode.READ) {
+                    mAnnotationView.startAnnotation();
+                    currentMode = Mode.ANNOTATE;
+                } else {
+                    mAnnotationView.finishAnnotation();
+                    currentMode = Mode.READ;
+                }
                 break;
             }
         }

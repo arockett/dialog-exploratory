@@ -23,5 +23,7 @@
     <string name="info">Info</string>
     <string name="previous">Previous</string>
     <string name="next">Next</string>
+    <string name="new_annotation">New Annotation</string>
+    <string name="save_annotation">Save Annotation</string>
 
 </resources>
