@@ -98,6 +98,7 @@ public class FreeDrawView extends View {
 
     public Annotation disable() {
         enabled = false;
+        mBitmap.eraseColor(Color.TRANSPARENT);
         return newAnnotation;
     }
 

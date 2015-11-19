@@ -25,9 +25,9 @@ public class AnnotationView extends View {
     private FreeDrawView freeDrawView;
 
     /**
-     * The annotations that have been made on the document
+     * The annotations that have been made on the current page
      */
-    private ArrayList<Annotation> annotations = new ArrayList<>();
+    private ArrayList<ArrayList<Annotation>> annotations = new ArrayList<>();
 
     /**
      * The parameter object that packages serializable member variables
@@ -81,6 +81,13 @@ public class AnnotationView extends View {
 
     public void setPage(int num) {
         params.pageNumber = num;
+
+        if (annotations.size() <= num) {
+            int numToAdd = (num+1) - annotations.size();
+            for(int i = 0; i < numToAdd; i++) {
+                annotations.add(new ArrayList<Annotation>());
+            }
+        }
     }
 
     public void setFreeDrawView(FreeDrawView freeDrawView) {
@@ -94,7 +101,7 @@ public class AnnotationView extends View {
     public void finishAnnotation() {
         Annotation newAnnot = freeDrawView.disable();
         if (!newAnnot.isEmpty()) {
-            annotations.add(newAnnot);
+            annotations.get(params.pageNumber).add(newAnnot);
         }
     }
 
