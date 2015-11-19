@@ -1,39 +1,39 @@
 package com.example.android.pdfrendererbasic;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Path;
 import android.os.Bundle;
 import android.util.AttributeSet;
-import android.view.MotionEvent;
 import android.view.View;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+
 /**
- * Created by Aaron Beckett on 11/15/2015.
+ * TODO: document your custom view class.
  */
 public class AnnotationView extends View {
 
     /**
-     * Key string for saving the state of the enabled flag
+     * Key that is used to save the state of our parameters in a bundle
      */
-    private static final String STATE_ENABLED = "state_enabled";
+    private static final String STATE_PARAMETERS = "state_parameters";
 
     /**
-     * Are we in the annotation mode? If so we should handle touch events
+     * {@link FreeDrawView} that is used to make new annotations
      */
-    private boolean enabled = false;
+    private FreeDrawView freeDrawView;
 
-    private Canvas mCanvas;
-    private Bitmap mBitmap;
-    private Paint mBitmapPaint;
-    private Path mPath;
-    private Paint mPaint;
+    /**
+     * The annotations that have been made on the document
+     */
+    private ArrayList<Annotation> annotations = new ArrayList<>();
 
-    private float mX, mY;
-    private static final float TOUCH_TOLERANCE = 2;
+    /**
+     * The parameter object that packages serializable member variables
+     */
+    private Parameters params = new Parameters();
+
 
     public AnnotationView(Context context) {
         super(context);
@@ -51,98 +51,66 @@ public class AnnotationView extends View {
     }
 
     private void init(AttributeSet attrs, int defStyle) {
-        mPath = new Path();
-        mBitmapPaint = new Paint(Paint.DITHER_FLAG);
-
-        mPaint = new Paint();
-        mPaint.setAntiAlias(true);
-        mPaint.setDither(true);
-        mPaint.setColor(Color.RED);
-        mPaint.setStyle(Paint.Style.STROKE);
-        mPaint.setStrokeJoin(Paint.Join.ROUND);
-        mPaint.setStrokeCap(Paint.Cap.ROUND);
-        mPaint.setStrokeWidth(12);
     }
 
     public void saveState(Bundle bundle) {
-        bundle.putBoolean(STATE_ENABLED, enabled);
+        
+        bundle.putSerializable(STATE_PARAMETERS, params);
+
+        if (freeDrawView != null) {
+            freeDrawView.saveState(bundle);
+        }
     }
 
     public void loadState(Bundle savedInstanceState) {
-        enabled = savedInstanceState.getBoolean(STATE_ENABLED);
+        params = (Parameters)savedInstanceState.getSerializable(STATE_PARAMETERS);
+
+        if (freeDrawView != null) {
+            freeDrawView.loadState(savedInstanceState);
+        }
     }
 
-    @Override
-    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        super.onSizeChanged(w, h, oldw, oldh);
-
-        mBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
-        mCanvas = new Canvas(mBitmap);
-
-    }
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-
-        canvas.drawBitmap(mBitmap, 0, 0, mBitmapPaint);
-
-        canvas.drawPath(mPath, mPaint);
     }
 
-    public void disable() {
-        enabled = false;
+    public void setDocumentName(String name) {
+        params.docName = name;
     }
 
-    public void enable() {
-        enabled = true;
+    public void setPage(int num) {
+        params.pageNumber = num;
     }
 
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        if (!enabled) {
-            return false;
-        }
-
-        float x = event.getX();
-        float y = event.getY();
-
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                touch_start(x, y);
-                invalidate();
-                return true;
-            case MotionEvent.ACTION_MOVE:
-                touch_move(x, y);
-                invalidate();
-                return true;
-            case MotionEvent.ACTION_UP:
-                touch_up();
-                invalidate();
-                return true;
-        }
-        return false;
+    public void setFreeDrawView(FreeDrawView freeDrawView) {
+        this.freeDrawView = freeDrawView;
     }
 
-    private void touch_start(float x, float y) {
-        mPath.reset();
-        mPath.moveTo(x, y);
-        mX = x;
-        mY = y;
+    public void startAnnotation() {
+        freeDrawView.enable();
     }
-    private void touch_move(float x, float y) {
-        float dx = Math.abs(x - mX);
-        float dy = Math.abs(y - mY);
-        if (dx >= TOUCH_TOLERANCE || dy >= TOUCH_TOLERANCE) {
-            mPath.quadTo(mX, mY, (x + mX)/2, (y + mY)/2);
-            mX = x;
-            mY = y;
+
+    public void finishAnnotation() {
+        Annotation newAnnot = freeDrawView.disable();
+        if (!newAnnot.isEmpty()) {
+            annotations.add(newAnnot);
         }
     }
-    private void touch_up() {
-        mPath.lineTo(mX, mY);
-        // commit the path to our offscreen
-        mCanvas.drawPath(mPath, mPaint);
-        // kill this so we don't double draw
-        mPath.reset();
+
+
+    /************************ Nested Classes ************************/
+
+    private static class Parameters implements Serializable {
+
+        /**
+         * The displayed document's name
+         */
+        public String docName = "";
+
+        /**
+         * The current page number in the document
+         */
+        public int pageNumber = 0;
     }
 }

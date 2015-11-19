@@ -26,18 +26,20 @@
         android:layout_height="0dp"
         android:layout_weight="1">
 
-        <com.example.android.pdfrendererbasic.DocumentView
+        <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/documentView"
-            android:layout_gravity="center"
-            android:background="@android:color/darker_gray" />
+            android:id="@+id/document" />
 
         <com.example.android.pdfrendererbasic.AnnotationView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/freeDrawView"
-            android:layout_gravity="center" />
+            android:id="@+id/annotationView" />
+
+        <com.example.android.pdfrendererbasic.FreeDrawView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/freeDrawView" />
 
     </FrameLayout>
 

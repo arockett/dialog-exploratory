@@ -21,12 +21,14 @@ import android.app.Fragment;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.pdf.PdfRenderer;
+import android.media.Image;
 import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -69,10 +71,14 @@ public class diaLogDocFragment extends Fragment implements View.OnClickListener 
     private PdfRenderer.Page mCurrentPage;
 
     /**
-     * {@link DocumentView} that shows a PDF page as a {@link android.graphics.Bitmap}
+     * The image view that displays the document
      */
-    private DocumentView mDocumentView;
-    private AnnotationView mFreeDrawView;
+    private ImageView mDocument;
+
+    /**
+     * {@link AnnotationView} that shows a PDF page as a {@link android.graphics.Bitmap}
+     */
+    private AnnotationView mAnnotationView;
 
     /**
      * {@link android.widget.Button} to move to the previous page.
@@ -97,9 +103,9 @@ public class diaLogDocFragment extends Fragment implements View.OnClickListener 
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         // Retain view references.
-        mDocumentView = (DocumentView) view.findViewById(R.id.documentView);
-        mFreeDrawView = (AnnotationView)view.findViewById(R.id.freeDrawView);
-        mFreeDrawView.disable();
+        mDocument = (ImageView)view.findViewById(R.id.document);
+        mAnnotationView = (AnnotationView) view.findViewById(R.id.annotationView);
+        mAnnotationView.setFreeDrawView((FreeDrawView) view.findViewById(R.id.freeDrawView));
         mButtonPrevious = (Button) view.findViewById(R.id.previous);
         mButtonNext = (Button) view.findViewById(R.id.next);
         // Bind events.
@@ -111,7 +117,7 @@ public class diaLogDocFragment extends Fragment implements View.OnClickListener 
         if (null != savedInstanceState) {
             index = savedInstanceState.getInt(STATE_CURRENT_PAGE_INDEX, 0);
             currentMode = (Mode)savedInstanceState.getSerializable(STATE_CURRENT_MODE);
-            mDocumentView.loadState(savedInstanceState);
+            mAnnotationView.loadState(savedInstanceState);
         }
         showPage(index);
     }
@@ -145,7 +151,7 @@ public class diaLogDocFragment extends Fragment implements View.OnClickListener 
             outState.putInt(STATE_CURRENT_PAGE_INDEX, mCurrentPage.getIndex());
             outState.putSerializable(STATE_CURRENT_MODE, currentMode);
 
-            mDocumentView.saveState(outState);
+            mAnnotationView.saveState(outState);
         }
     }
 
@@ -196,7 +202,8 @@ public class diaLogDocFragment extends Fragment implements View.OnClickListener 
         // Pass either RENDER_MODE_FOR_DISPLAY or RENDER_MODE_FOR_PRINT for the last parameter.
         mCurrentPage.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY);
         // We are ready to show the Bitmap to user.
-        mDocumentView.setPage(bitmap, index);
+        mDocument.setImageBitmap(bitmap);
+        mAnnotationView.setPage(index);
         updateUi();
     }
 
@@ -230,7 +237,8 @@ public class diaLogDocFragment extends Fragment implements View.OnClickListener 
             }
             case R.id.next: {
                 // Move to the next page
-                showPage(mCurrentPage.getIndex() + 1);
+                //showPage(mCurrentPage.getIndex() + 1);
+                mAnnotationView.startAnnotation();
                 break;
             }
         }
